@@ -141,6 +141,12 @@ public class GABrowserController {
       dataTable.refresh();
    }   
 
+   /**
+    * Show GA data in a somple BarChart. <br>
+    * This method assumes that the first two columns contain year and month information.
+    *   
+    * @param data
+    */
    private void showChart(GaData data) {
       
       userChart.getData().clear();     
@@ -163,6 +169,7 @@ public class GABrowserController {
             
             seriesUser.getData().add( datapoint );
             
+            // adjust 
             NumberAxis y = (NumberAxis) userChart.getYAxis();
             if( users > y.getUpperBound() ) {
                y.setUpperBound( users + 100.0 );
@@ -177,7 +184,7 @@ public class GABrowserController {
    }
 
    /**
-    * 
+    * @see to find and adjust correct parameter use Query-Explorer at https://ga-dev-tools.appspot.com/query-explorer/
     * @param id
     * @return
     */
