@@ -10,7 +10,7 @@ We at doubleSlash have some websites which are monitored and reported monthly by
 If I want to have some live data or special reports in the past I have to go to the marketing and discourage them from work.<br>
 With this tool I can monitor our website everytime I want and whatever I want.
 
-# Latest stable build: !(bin/gawebsite.jar)
+# Latest stable build: (bin/gawebsite.jar)
 
 # Prerequisites to compile
 - JDK 1.8 Update40 or higher
