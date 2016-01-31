@@ -162,29 +162,6 @@ public class GABrowserController {
     * @param id
     * @return
     */
-/*   private GaData getGAData(String id, String path) {
-
-      try {
-         Get get = analytics.data().ga().get("ga:" + id, "2015-07-01", "today", "ga:users,ga:avgTimeOnPage").setDimensions("ga:year,ga:month");
-         String filter = null;
-         if (path != null && path.length() > 0) {
-            filter = "ga:pagePath=~(" + path + ")";
-            get = get.setFilters( filter );
-         }
-         return get.execute();
-      }
-      catch (IOException e) {
-         MainApp.showException("Google Analytics Daten konnte nicht gelesen werden.", e);
-         return null;
-      }
-   }
-*/   
-   /**
-    * @see to find and adjust correct parameter use Query-Explorer at
-    *      https://ga-dev-tools.appspot.com/query-explorer/
-    * @param id
-    * @return
-    */
    private GaData getGAData(String id, String path) {
 
       try {
@@ -204,33 +181,6 @@ public class GABrowserController {
          MainApp.showException("Google Analytics Daten konnte nicht gelesen werden.", e);
          return null;
       }
-   }
-
-   /**
-    * Returns the top 25 organic search keywords and traffic source by visits.
-    * The Core Reporting API is used to retrieve this data.
-    *
-    * @param analytics
-    *           the analytics service object used to access the API.
-    * @param profileId
-    *           the profile ID from which to retrieve data.
-    * @return the response from the API.
-    * @throws IOException
-    *            tf an API error occured.
-    */
-   @SuppressWarnings("unused")
-   private static GaData executeDataQuery(Analytics analytics, String profileId) throws IOException {
-
-      /*
-       * GaData data = analytics.data().ga().get("ga:" + profileId, // Table Id.
-       * ga: + profile id. "2012-01-01", // Start date. "2012-01-14", // End
-       * date. "ga:visits") // Metrics. .setDimensions("ga:source,ga:keyword")
-       * .setSort("-ga:visits,ga:source") .setFilters("ga:medium==organic")
-       * .setMaxResults(25) .execute();
-       */
-      GaData data = analytics.data().ga().get("ga:" + profileId, "2015-12-01", "2016-01-10", "ga:users").execute();
-
-      return data;
    }
 
    /**
