@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="264.0" prefWidth="342.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.doubleslash.ga.ProfileSelectorController">
+   <children>
+      <VBox prefHeight="323.0" prefWidth="417.0">
+         <children>
+            <Label text="Bitte wähle eine View aus:" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Pane prefHeight="159.0" prefWidth="342.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" text="Account:" />
+                  <ComboBox fx:id="cmbAccount" layoutX="81.0" layoutY="9.0" prefHeight="27.0" prefWidth="321.0" />
+                  <ComboBox fx:id="cmbProperty" layoutX="81.0" layoutY="44.0" prefHeight="27.0" prefWidth="321.0" />
+                  <ComboBox fx:id="cmbView" layoutX="81.0" layoutY="79.0" prefHeight="27.0" prefWidth="321.0" />
+                  <Label layoutX="14.0" layoutY="49.0" text="Property:" />
+                  <Label layoutX="14.0" layoutY="84.0" text="View:" />
+                  <Label fx:id="lblViewid" layoutX="326.0" layoutY="113.0" text="&lt;viewId&gt;" />
+                  <Label layoutX="278.0" layoutY="113.0" text="ViewId:" />
+                  <TextField fx:id="txtPath" layoutX="81.0" layoutY="148.0" prefHeight="27.0" prefWidth="321.0" promptText="Pfad zur Unterseite" text="/" />
+                  <Label layoutX="14.0" layoutY="153.0" text="Pfad:" />
+                  <Separator layoutX="9.0" layoutY="186.0" prefHeight="4.0" prefWidth="397.0" />
+                  <Label layoutX="14.0" layoutY="191.0" text="Name des Angebotes:" />
+                  <TextField fx:id="txtOffername" layoutX="14.0" layoutY="208.0" prefHeight="27.0" prefWidth="388.0" promptText="Name des Angebotes" />
+               </children>
+            </Pane>
+            <Pane maxHeight="48.0" minHeight="48.0" prefHeight="48.0" VBox.vgrow="NEVER">
+               <children>
+                  <Button layoutX="305.0" layoutY="11.0" mnemonicParsing="false" onAction="#save" text="Übernehmen" />
+                  <Button layoutX="209.0" layoutY="11.0" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                  <Separator layoutY="-1.0" prefHeight="4.0" prefWidth="417.0" />
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
