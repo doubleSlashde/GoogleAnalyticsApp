@@ -10,8 +10,8 @@ Replace src/main/resources/client_secrets.json with your own API-Key. (see https
 'mvn install' will generate a runnable jar-file 'gaoffersite.jar'
 
 # Why GoogleAnalyticsApp?
-We at doubleSlash have some websites which are monitored and reported monthly by our marketing department. They use Google Analytics to get usage information and put this information in an aggregated form into powerpoint. 
-If I want to have some live data or special reports in the past I have to go to the marketing and discourage them from work.
+We at doubleSlash have some websites which are monitored and reported monthly by our marketing department. They use Google Analytics to get usage information and put this information in an aggregated form into powerpoint.<br>
+If I want to have some live data or special reports in the past I have to go to the marketing and discourage them from work.<br>
 With this tool I can monitor our website everytime I want and whatever I want.
 
 
