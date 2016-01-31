@@ -33,31 +33,71 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-   
-   private static final String APPLICATION_NAME = "GABrowser";
-   private static final java.io.File DATA_STORE_DIR =
-       new java.io.File(System.getProperty("user.home"), ".store/analytics_sample");
+
+   private static final String         APPLICATION_NAME = "GABrowser";
+   private static final java.io.File   DATA_STORE_DIR   = new java.io.File(System.getProperty("user.home"), ".store/analytics_sample");
    private static FileDataStoreFactory dataStoreFactory;
-   private static HttpTransport httpTransport;
-   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+   private static HttpTransport        httpTransport;
+   private static final JsonFactory    JSON_FACTORY     = JacksonFactory.getDefaultInstance();
 
-   Analytics analytics;
+   Analytics                           analytics;
 
-	@Override
-	public void start(Stage primaryStage) {
-	   
+   /**
+    * Authorizes the installed application to access user's protected data. <br>
+    * To get your own client_secrets.json use the Google API Developer console (https://console.developers.google.com/apis/credentials)
+    * the registered client_secrets.json within this project is limited up to 50.000 req/day.
+    * @return
+    * @throws Exception
+    */
+   private static Credential authorize() throws Exception {
+      // load client secrets
+      GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(MainApp.class.getResourceAsStream("/client_secrets.json")));
+   
+      // @formatter:off
+       GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+                                                    httpTransport, 
+                                                    JSON_FACTORY, 
+                                                    clientSecrets,
+                                                    Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY))
+                                               .setDataStoreFactory(dataStoreFactory)
+                                               .build();
+       // @formatter:on
+   
+      Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+   
+      return credential;
+   }
+
+   /**
+    * Performs all necessary setup steps for running requests against the API.
+    * @return An initialized Analytics service object.
+    * @throws Exception
+    *            if an issue occurs with OAuth2Native authorize.
+    */
+   private static Analytics initializeAnalytics() throws Exception {
+      // Authorization.
+      Credential credential = authorize();
+   
+      // Set up and return Google Analytics API client.
+      return new Analytics.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+   }
+
+   @Override
+   public void start(Stage primaryStage) {
+
       try {
          httpTransport = GoogleNetHttpTransport.newTrustedTransport();
          dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
          analytics = initializeAnalytics();
-         
-       } catch (GoogleJsonResponseException e) {
-         System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
-             + e.getDetails().getMessage());
-       } catch (Throwable t) {
+
+      }
+      catch (GoogleJsonResponseException e) {
+         System.err.println("There was a service error: " + e.getDetails().getCode() + " : " + e.getDetails().getMessage());
+      }
+      catch (Throwable t) {
          t.printStackTrace();
-       }
-      
+      }
+
       OfferSite.loadOfferSite();
 
       try {
@@ -65,12 +105,12 @@ public class MainApp extends Application {
 
          AnchorPane page = (AnchorPane) loader.load();
          Scene scene = new Scene(page);
-         
+
          Stage stage = new Stage();
          stage.setTitle("GoogleAnalytics Browser");
          stage.initModality(Modality.WINDOW_MODAL);
          stage.toFront();
-         stage.setResizable( false );
+         stage.setResizable(false);
          stage.initOwner(primaryStage);
          stage.setScene(scene);
 
@@ -78,23 +118,22 @@ public class MainApp extends Application {
          GABrowserController controller = loader.getController();
 
          controller.setStage(stage);
-         controller.setAnalytics( analytics );
-         
+         controller.setAnalytics(analytics);
+
          controller.start();
 
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
          showException("Dialog konnte nicht initialisiert werden.", e);
       }
-	   
-	   
-	}
-	
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-	
-	  /**
+   }
+
+   public static void main(String[] args) {
+      launch(args);
+   }
+
+   /**
     * @param message
     */
    public static void showInfo(String message) {
@@ -107,7 +146,6 @@ public class MainApp extends Application {
       alert.showAndWait();
    }
 
-	
    public static void showException(String message, Exception e) {
       Alert alert = new Alert(AlertType.ERROR);
       alert.setContentText(message);
@@ -142,48 +180,5 @@ public class MainApp extends Application {
 
       alert.showAndWait();
    }
-	
-	  
-	  
-
-	  /** Authorizes the installed application to access user's protected data. 
-	   * 
-	   * @return
-	   * @throws Exception
-	   */
-	  private static Credential authorize() throws Exception {
-	    // load client secrets
-	    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load( JSON_FACTORY, new InputStreamReader( MainApp.class.getResourceAsStream("/client_secrets.json")));
-
-	    // @formatter:off
-	    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-	                                                 httpTransport, 
-	                                                 JSON_FACTORY, 
-	                                                 clientSecrets,
-	                                                 Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY))
-	                                            .setDataStoreFactory(dataStoreFactory)
-	                                            .build();
-	    // @formatter:on
-	    
-	    Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user"); 
-	    
-	    return credential;
-	  }
-
-	  /**
-	   * Performs all necessary setup steps for running requests against the API.
-	   *
-	   * @return An initialized Analytics service object.
-	   *
-	   * @throws Exception if an issue occurs with OAuth2Native authorize.
-	   */
-	  private static Analytics initializeAnalytics() throws Exception {
-	    // Authorization.
-	    Credential credential = authorize();
-
-	    // Set up and return Google Analytics API client.
-	    return new Analytics.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
-	        APPLICATION_NAME).build();
-	  }
 
 }
