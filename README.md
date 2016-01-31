@@ -1,5 +1,5 @@
 # GoogleAnalyticsApp
-JavaFX based App for retrieving Google Analytics Data (ga:users and ga:avgTimeOnPage) on monthly base.
+JavaFX 8 based app for retrieving Google Analytics Data (ga:users and ga:avgTimeOnPage) on monthly base.
 
 # Screenshots
 ![missing inage](addofferscreen.png?raw=true "Add new website screen")
