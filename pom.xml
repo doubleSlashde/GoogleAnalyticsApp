@@ -38,33 +38,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jarsigner-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>sign</id>
-						<phase>install</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<archiveDirectory>target</archiveDirectory>
-					<excludes>
-						<exclude>**/S*.jar</exclude>
-					</excludes>
-					<includes>
-						<include>**/*.jar</include>
-					</includes>
-					<keystore>${user.home}/.keystore</keystore>
-					<alias>KonradMBK</alias>
-					<storepass>konrad4ds</storepass>
-					<keypass>konrad4ds</keypass>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
