@@ -19,7 +19,8 @@ With this tool I can monitor our website everytime I want and whatever I want.
 
 'mvn install' will generate a runnable jar-file 'gawebsite.jar' into ./bin directory
 
-Replace src/main/resources/client_secrets.json with your own API-Key. (see https://console.developers.google.com/apis/credentials and register your own app)
+Replace src/main/resources/client_secrets.json with your own API-Key. <br>
+(see https://console.developers.google.com/apis/credentials and register your own app)
 
 
 
