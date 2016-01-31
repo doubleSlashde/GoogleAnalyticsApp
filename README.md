@@ -15,7 +15,7 @@ If I want to have some live data or special reports in the past I have to go to 
 With this tool I can monitor our website everytime I want and whatever I want.
 
 # Screenshots
-![picture not found](screenshot.png?raw=true "GoogleAnalyticsApp Main screen")
+![picture not found](mainsreen.png?raw=true "GoogleAnalyticsApp Main screen")
 
 
 
