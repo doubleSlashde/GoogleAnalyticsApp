@@ -25,53 +25,57 @@ import javafx.util.StringConverter;
 public class ProfileSelectorController {
 
    Stage stage;
-   Analytics analytics; 
-   
-   @FXML ComboBox<Account> cmbAccount;
-   @FXML ComboBox<Webproperty> cmbProperty;
-   @FXML ComboBox<Profile> cmbView;
-   @FXML Label lblViewid;
-   @FXML TextField txtPath;
-   @FXML TextField txtOffername;
+   Analytics analytics;
+
+   @FXML
+   ComboBox<Account> cmbAccount;
+   @FXML
+   ComboBox<Webproperty> cmbProperty;
+   @FXML
+   ComboBox<Profile> cmbView;
+   @FXML
+   Label lblViewid;
+   @FXML
+   TextField txtPath;
+   @FXML
+   TextField txtOffername;
    private boolean save;
 
-   public void setStage(Stage stage) {
-      this.stage = stage;   
-    }
-   
-   public void setAnalytics(Analytics analytics) {
-      this.analytics = analytics;  
+   public void setStage(final Stage stage) {
+      this.stage = stage;
    }
 
-    public void start() {
-       
-    // Query for the list of all accounts associated with the service account.
-       try {
-         Accounts accounts = analytics.management().accounts().list().execute();
-         initializeComboBoxes(accounts); 
-         
-      }
-      catch (IOException e) {
-        MainApp.showException("Fehler beim Auslesen des Google Kontos.", e);
+   public void setAnalytics(final Analytics analytics) {
+      this.analytics = analytics;
+   }
+
+   public void start() {
+
+      // Query for the list of all accounts associated with the service account.
+      try {
+         final Accounts accounts = analytics.management().accounts().list().execute();
+         initializeComboBoxes(accounts);
+
+      } catch (final IOException e) {
+         MainApp.showException("Fehler beim Auslesen des Google Kontos.", e);
       }
 
-       
-       stage.centerOnScreen();
-       stage.toFront();
-       stage.setResizable( false );
-       stage.showAndWait();
-    }
+      stage.centerOnScreen();
+      stage.toFront();
+      stage.setResizable(false);
+      stage.showAndWait();
+   }
 
    /**
     * @param accounts
     */
-   private void initializeComboBoxes(Accounts accounts) {
+   private void initializeComboBoxes(final Accounts accounts) {
 
-      ObservableList<Account> accountList = FXCollections.observableList(accounts.getItems());
+      final ObservableList<Account> accountList = FXCollections.observableList(accounts.getItems());
       cmbAccount.setItems(accountList);
       cmbAccount.setCellFactory(p -> new ListCell<Account>() {
          @Override
-         protected void updateItem(Account account, boolean bln) {
+         protected void updateItem(final Account account, final boolean bln) {
             super.updateItem(account, bln);
             if (account != null) {
                // Schreibe einfach nur den Namen des Offers in die Zelle
@@ -82,7 +86,7 @@ public class ProfileSelectorController {
 
       cmbProperty.setCellFactory(p -> new ListCell<Webproperty>() {
          @Override
-         protected void updateItem(Webproperty property, boolean empty) {
+         protected void updateItem(final Webproperty property, final boolean empty) {
             super.updateItem(property, empty);
             if (property != null) {
                // Schreibe einfach nur den Namen des Offers in die Zelle
@@ -93,7 +97,7 @@ public class ProfileSelectorController {
 
       cmbView.setCellFactory(p -> new ListCell<Profile>() {
          @Override
-         protected void updateItem(Profile profile, boolean empty) {
+         protected void updateItem(final Profile profile, final boolean empty) {
             super.updateItem(profile, empty);
             if (profile != null) {
                // Schreibe einfach nur den Namen des Offers in die Zelle
@@ -105,15 +109,15 @@ public class ProfileSelectorController {
       cmbAccount.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Account>() {
 
          @Override
-         public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
-            String id = newValue.getId();
+         public void changed(final ObservableValue<? extends Account> observable, final Account oldValue,
+               final Account newValue) {
+            final String id = newValue.getId();
             try {
-               Webproperties properties = analytics.management().webproperties().list(id).execute();
-               ObservableList<Webproperty> propertyList = FXCollections.observableList(properties.getItems());
+               final Webproperties properties = analytics.management().webproperties().list(id).execute();
+               final ObservableList<Webproperty> propertyList = FXCollections.observableList(properties.getItems());
                cmbProperty.setItems(propertyList);
                cmbView.setItems(null);
-            }
-            catch (IOException e) {
+            } catch (final IOException e) {
                MainApp.showException("Fehler beim Auslesen der GoogleAnalytics Web-Properties.", e);
             }
 
@@ -123,16 +127,16 @@ public class ProfileSelectorController {
       cmbProperty.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Webproperty>() {
 
          @Override
-         public void changed(ObservableValue<? extends Webproperty> observable, Webproperty oldValue, Webproperty newValue) {
+         public void changed(final ObservableValue<? extends Webproperty> observable, final Webproperty oldValue,
+               final Webproperty newValue) {
             if (newValue != null) {
-               String wbid = newValue.getId();
-               String accId = newValue.getAccountId();
+               final String wbid = newValue.getId();
+               final String accId = newValue.getAccountId();
                try {
-                  Profiles profiles = analytics.management().profiles().list(accId, wbid).execute();
-                  ObservableList<Profile> profileList = FXCollections.observableList(profiles.getItems());
+                  final Profiles profiles = analytics.management().profiles().list(accId, wbid).execute();
+                  final ObservableList<Profile> profileList = FXCollections.observableList(profiles.getItems());
                   cmbView.setItems(profileList);
-               }
-               catch (IOException e) {
+               } catch (final IOException e) {
                   MainApp.showException("Kann GoogleAnalytics Profile/Views nicht lesen.", e);
                }
             }
@@ -142,7 +146,8 @@ public class ProfileSelectorController {
       cmbView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Profile>() {
 
          @Override
-         public void changed(ObservableValue<? extends Profile> observable, Profile oldValue, Profile newValue) {
+         public void changed(final ObservableValue<? extends Profile> observable, final Profile oldValue,
+               final Profile newValue) {
             String viewid = "<viewid>";
 
             if (newValue != null) {
@@ -157,13 +162,12 @@ public class ProfileSelectorController {
       cmbAccount.setConverter(new StringConverter<Account>() {
 
          @Override
-         public String toString(Account object) {
+         public String toString(final Account object) {
             return object.getName();
          }
 
          @Override
-         public Account fromString(String string) {
-            // TODO Auto-generated method stub
+         public Account fromString(final String string) {
             return null;
          }
       });
@@ -171,13 +175,12 @@ public class ProfileSelectorController {
       cmbProperty.setConverter(new StringConverter<Webproperty>() {
 
          @Override
-         public String toString(Webproperty object) {
+         public String toString(final Webproperty object) {
             return object.getName();
          }
 
          @Override
-         public Webproperty fromString(String string) {
-            // TODO Auto-generated method stub
+         public Webproperty fromString(final String string) {
             return null;
          }
       });
@@ -185,25 +188,27 @@ public class ProfileSelectorController {
       cmbView.setConverter(new StringConverter<Profile>() {
 
          @Override
-         public String toString(Profile object) {
+         public String toString(final Profile object) {
             return object.getName();
          }
 
          @Override
-         public Profile fromString(String string) {
+         public Profile fromString(final String string) {
             // TODO Auto-generated method stub
             return null;
          }
       });
 
    }
-   
-   @FXML private void cancel() {
+
+   @FXML
+   private void cancel() {
       setSave(false);
       stage.close();
    }
 
-   @FXML private void save() {
+   @FXML
+   private void save() {
       setSave(true);
       stage.close();
    }
@@ -212,19 +217,20 @@ public class ProfileSelectorController {
       return save;
    }
 
-   public void setSave(boolean save) {
+   public void setSave(final boolean save) {
       this.save = save;
    }
-   
+
    public String getOffername() {
       return txtOffername.getText();
    }
+
    public String getViewid() {
       return lblViewid.getText();
    }
+
    public String getPath() {
       return txtPath.getText();
    }
-   
-   
+
 }

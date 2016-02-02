@@ -34,27 +34,31 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
-   private static final String         APPLICATION_NAME = "GABrowser";
-   private static final java.io.File   DATA_STORE_DIR   = new java.io.File(System.getProperty("user.home"), ".store/analytics_sample");
+   private static final String APPLICATION_NAME = "GABrowser";
+   private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
+         ".store/analytics_sample");
    private static FileDataStoreFactory dataStoreFactory;
-   private static HttpTransport        httpTransport;
-   private static final JsonFactory    JSON_FACTORY     = JacksonFactory.getDefaultInstance();
+   private static HttpTransport httpTransport;
+   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-   Analytics                           analytics;
+   Analytics analytics;
 
    /**
     * Authorizes the installed application to access user's protected data. <br>
-    * To get your own client_secrets.json use the Google API Developer console (https://console.developers.google.com/apis/credentials)
-    * the registered client_secrets.json within this project is limited up to 50.000 req/day.
+    * To get your own client_secrets.json use the Google API Developer console
+    * (https://console.developers.google.com/apis/credentials) the registered client_secrets.json within this project is
+    * limited up to 50.000 req/day.
+    * 
     * @return
     * @throws Exception
     */
    private static Credential authorize() throws Exception {
       // load client secrets
-      GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(MainApp.class.getResourceAsStream("/client_secrets.json")));
-   
+      final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+            new InputStreamReader(MainApp.class.getResourceAsStream("/client_secrets.json")));
+
       // @formatter:off
-       GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+       final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                                                     httpTransport, 
                                                     JSON_FACTORY, 
                                                     clientSecrets,
@@ -62,51 +66,53 @@ public class MainApp extends Application {
                                                .setDataStoreFactory(dataStoreFactory)
                                                .build();
        // @formatter:on
-   
-      Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-   
+
+      final Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver())
+            .authorize("user");
+
       return credential;
    }
 
    /**
     * Performs all necessary setup steps for running requests against the API.
+    * 
     * @return An initialized Analytics service object.
     * @throws Exception
     *            if an issue occurs with OAuth2Native authorize.
     */
    private static Analytics initializeAnalytics() throws Exception {
       // Authorization.
-      Credential credential = authorize();
-   
+      final Credential credential = authorize();
+
       // Set up and return Google Analytics API client.
-      return new Analytics.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+      return new Analytics.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME)
+            .build();
    }
 
    @Override
-   public void start(Stage primaryStage) {
+   public void start(final Stage primaryStage) {
 
       try {
          httpTransport = GoogleNetHttpTransport.newTrustedTransport();
          dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
          analytics = initializeAnalytics();
 
-      }
-      catch (GoogleJsonResponseException e) {
-         System.err.println("There was a service error: " + e.getDetails().getCode() + " : " + e.getDetails().getMessage());
-      }
-      catch (Throwable t) {
+      } catch (final GoogleJsonResponseException e) {
+         System.err
+               .println("There was a service error: " + e.getDetails().getCode() + " : " + e.getDetails().getMessage());
+      } catch (final Throwable t) {
          t.printStackTrace();
       }
 
       OfferSite.loadOfferSite();
 
       try {
-         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("GABrowser.fxml"));
+         final FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("GABrowser.fxml"));
 
-         AnchorPane page = (AnchorPane) loader.load();
-         Scene scene = new Scene(page);
+         final AnchorPane page = (AnchorPane) loader.load();
+         final Scene scene = new Scene(page);
 
-         Stage stage = new Stage();
+         final Stage stage = new Stage();
          stage.setTitle("GoogleAnalytics Browser");
          stage.initModality(Modality.WINDOW_MODAL);
          stage.toFront();
@@ -115,29 +121,28 @@ public class MainApp extends Application {
          stage.setScene(scene);
 
          // Link with controller
-         GABrowserController controller = loader.getController();
+         final GABrowserController controller = loader.getController();
 
          controller.setStage(stage);
          controller.setAnalytics(analytics);
 
          controller.start();
 
-      }
-      catch (Exception e) {
+      } catch (final Exception e) {
          showException("Dialog konnte nicht initialisiert werden.", e);
       }
 
    }
 
-   public static void main(String[] args) {
+   public static void main(final String[] args) {
       launch(args);
    }
 
    /**
     * @param message
     */
-   public static void showInfo(String message) {
-      Alert alert = new Alert(AlertType.INFORMATION);
+   public static void showInfo(final String message) {
+      final Alert alert = new Alert(AlertType.INFORMATION);
       alert.setContentText(message);
       alert.setHeaderText("Hinweis");
       alert.setWidth(480.0);
@@ -146,21 +151,21 @@ public class MainApp extends Application {
       alert.showAndWait();
    }
 
-   public static void showException(String message, Exception e) {
-      Alert alert = new Alert(AlertType.ERROR);
+   public static void showException(final String message, final Exception e) {
+      final Alert alert = new Alert(AlertType.ERROR);
       alert.setContentText(message);
       alert.setHeaderText("Systemfehler");
       alert.setWidth(800.0);
       alert.setHeight(600.0);
       // Create expandable Exception.
-      StringWriter sw = new StringWriter();
-      PrintWriter pw = new PrintWriter(sw);
+      final StringWriter sw = new StringWriter();
+      final PrintWriter pw = new PrintWriter(sw);
       e.printStackTrace(pw);
-      String exceptionText = sw.toString();
+      final String exceptionText = sw.toString();
 
-      Label label = new Label("The exception stacktrace was:");
+      final Label label = new Label("The exception stacktrace was:");
 
-      TextArea textArea = new TextArea(exceptionText);
+      final TextArea textArea = new TextArea(exceptionText);
       textArea.setEditable(false);
       textArea.setWrapText(true);
 
@@ -169,7 +174,7 @@ public class MainApp extends Application {
       GridPane.setVgrow(textArea, Priority.ALWAYS);
       GridPane.setHgrow(textArea, Priority.ALWAYS);
 
-      GridPane expContent = new GridPane();
+      final GridPane expContent = new GridPane();
       expContent.setMaxWidth(Double.MAX_VALUE);
       expContent.add(label, 0, 0);
       expContent.add(textArea, 0, 1);
