@@ -33,28 +33,35 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * 
  * @author kkrafft
- *
  */
 public class GABrowserController {
 
-   Stage                                  stage;
-   Analytics                              analytics;
+   Stage stage;
+   Analytics analytics;
 
-   private List<TableEntry>               dataList;
-   private ObservableList<TableEntry>     observableDataList;
+   private List<TableEntry> dataList;
+   private ObservableList<TableEntry> observableDataList;
 
-   @FXML BarChart<String, Number>         userChart;
-   @FXML ListView<OfferSite>              offerListView;
-   @FXML TableView<TableEntry>            dataTable;
-   @FXML TableColumn<TableEntry, String>  colMonth;
-   @FXML TableColumn<TableEntry, Integer> colUsers;
-   @FXML TableColumn<TableEntry, String>  colAvgSessionDuration;
-   @FXML CheckBox                         chkOrganic;    
+   @FXML
+   BarChart<String, Number> userChart;
+   @FXML
+   ListView<OfferSite> offerListView;
+   @FXML
+   TableView<TableEntry> dataTable;
+   @FXML
+   TableColumn<TableEntry, String> colMonth;
+   @FXML
+   TableColumn<TableEntry, Integer> colUsers;
+   @FXML
+   TableColumn<TableEntry, String> colAvgSessionDuration;
+   @FXML
+   CheckBox chkOrganic;
 
-   @FXML Button                           removeBtn;
-   @FXML Button                           addBtn;
+   @FXML
+   Button removeBtn;
+   @FXML
+   Button addBtn;
 
    /**
     * 
@@ -65,13 +72,12 @@ public class GABrowserController {
       // Rendering der Zelle auf custom object 'OfferSite' anpassen
       offerListView.setCellFactory(lv -> new ListCell<OfferSite>() {
          @Override
-         protected void updateItem(OfferSite site, boolean bln) {
+         protected void updateItem(final OfferSite site, final boolean bln) {
             super.updateItem(site, bln);
             if (site != null) {
                // Schreibe einfach nur den Namen des Offers in die Zelle
                setText(site.offerName);
-            }
-            else {
+            } else {
                setText("");
             }
          }
@@ -80,31 +86,31 @@ public class GABrowserController {
       offerListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<OfferSite>() {
 
          @Override
-         public void changed(ObservableValue<? extends OfferSite> observable, OfferSite oldValue, OfferSite newValue) {
+         public void changed(final ObservableValue<? extends OfferSite> observable, final OfferSite oldValue,
+               final OfferSite newValue) {
             reloadData(newValue);
          }
       });
    }
 
    /**
-    * 
     * @param data
     */
-   private void showData(GaData data) {
+   private void showData(final GaData data) {
 
       observableDataList.clear();
 
       if (data.getRows() != null && !data.getRows().isEmpty()) {
 
          // Print actual data.
-         for (List<String> row : data.getRows()) {
+         for (final List<String> row : data.getRows()) {
 
-            String month = getMonthForInt(new Integer(row.get(1))) + " " + row.get(0);
-            Integer users = new Integer(row.get(2));
-            int sec = (new Double(row.get(3))).intValue();
-            String avgSessionDuration = sec / 60 + ":" + String.format("%02d", (sec % 60));
+            final String month = getMonthForInt(Integer.valueOf(row.get(1))) + " " + row.get(0);
+            final Integer users = new Integer(row.get(2));
+            final int sec = (new Double(row.get(3))).intValue();
+            final String avgSessionDuration = sec / 60 + ":" + String.format("%02d", (sec % 60));
 
-            TableEntry entry = new TableEntry(month, users, avgSessionDuration);
+            final TableEntry entry = new TableEntry(month, users, avgSessionDuration);
             observableDataList.add(entry);
          }
       }
@@ -114,36 +120,34 @@ public class GABrowserController {
 
    /**
     * Show GA data in a somple BarChart. <br>
-    * This method assumes that the first two columns contain year and month
-    * information.
+    * This method assumes that the first two columns contain year and month information.
     * 
     * @param data
     */
-   private void showChart(GaData data) {
+   private void showChart(final GaData data) {
 
       userChart.getData().clear();
 
       if (data.getRows() == null || data.getRows().isEmpty()) {
          userChart.setTitle("Keine Daten.");
-      }
-      else {
+      } else {
 
-         XYChart.Series<String, Number> seriesUser = new XYChart.Series<>();
+         final XYChart.Series<String, Number> seriesUser = new XYChart.Series<>();
 
          // Print actual data.
-         for (List<String> row : data.getRows()) {
-            String month = getMonthForInt(new Integer(row.get(1))) + " " + row.get(0);
-            Integer users = new Integer(row.get(2));
+         for (final List<String> row : data.getRows()) {
+            final String month = getMonthForInt(Integer.valueOf(row.get(1))) + " " + row.get(0);
+            final Integer users = new Integer(row.get(2));
 
-            XYChart.Data<String, Number> datapoint = new XYChart.Data<>(month, users);
-            Tooltip tooltip = new Tooltip();
+            final XYChart.Data<String, Number> datapoint = new XYChart.Data<>(month, users);
+            final Tooltip tooltip = new Tooltip();
             tooltip.setText(datapoint.getYValue().toString());
             Tooltip.install(datapoint.getNode(), tooltip);
 
             seriesUser.getData().add(datapoint);
 
             // adjust
-            NumberAxis y = (NumberAxis) userChart.getYAxis();
+            final NumberAxis y = (NumberAxis) userChart.getYAxis();
             if (users > y.getUpperBound()) {
                y.setUpperBound(users + 100.0);
             }
@@ -157,57 +161,57 @@ public class GABrowserController {
    }
 
    /**
-    * @see to find and adjust correct parameter use Query-Explorer at
-    *      https://ga-dev-tools.appspot.com/query-explorer/
+    * @see to find and adjust correct parameter use Query-Explorer at https://ga-dev-tools.appspot.com/query-explorer/
     * @param id
     * @return
     */
-   private GaData getGAData(String id, String path) {
+   private GaData getGAData(final String id, final String path) {
 
       try {
-         Get get = analytics.data().ga().get("ga:" + id, "2015-07-01", "today", "ga:users,ga:avgTimeOnPage").setDimensions("ga:year,ga:month");
+         final Get get = analytics.data().ga().get("ga:" + id, "2015-07-01", "today", "ga:users,ga:avgTimeOnPage")
+               .setDimensions("ga:year,ga:month");
          String filter = "";
          if (path != null && path.length() > 0) {
             filter = "ga:pagePath=~(" + path + ")";
          }
          if (chkOrganic.isSelected()) {
-            if (filter.length() > 1) filter += ";";
+            if (filter.length() > 1) {
+               filter += ";";
+            }
             filter += "ga:medium==organic";
          }
          get.setFilters(filter);
          return get.execute();
-      }
-      catch (IOException e) {
+      } catch (final IOException e) {
          MainApp.showException("Google Analytics Daten konnte nicht gelesen werden.", e);
          return null;
       }
    }
 
    /**
-    * Prints the output from the Core Reporting API. The profile name is printed
-    * along with each column name and all the data in the rows.
+    * Prints the output from the Core Reporting API. The profile name is printed along with each column name and all the
+    * data in the rows.
     *
     * @param results
     *           data returned from the Core Reporting API.
     */
    @SuppressWarnings("unused")
-   private static void printGaData(GaData results) {
+   private static void printGaData(final GaData results) {
       System.out.println("printing results for profile: " + results.getProfileInfo().getProfileName());
 
       if (results.getRows() == null || results.getRows().isEmpty()) {
          System.out.println("No results Found.");
-      }
-      else {
+      } else {
 
          // Print column headers.
-         for (ColumnHeaders header : results.getColumnHeaders()) {
+         for (final ColumnHeaders header : results.getColumnHeaders()) {
             System.out.printf("%30s", header.getName());
          }
          System.out.println();
 
          // Print actual data.
-         for (List<String> row : results.getRows()) {
-            for (String column : row) {
+         for (final List<String> row : results.getRows()) {
+            for (final String column : row) {
                System.out.printf("%30s", column);
             }
             System.out.println();
@@ -217,10 +221,10 @@ public class GABrowserController {
       }
    }
 
-   private String getMonthForInt(int num) {
+   private String getMonthForInt(final int num) {
       String month = "wrong";
-      DateFormatSymbols dfs = new DateFormatSymbols();
-      String[] months = dfs.getShortMonths();
+      final DateFormatSymbols dfs = new DateFormatSymbols();
+      final String[] months = dfs.getShortMonths();
       if (num >= 1 && num <= 12) {
          month = months[num - 1];
       }
@@ -230,46 +234,46 @@ public class GABrowserController {
    /**
     * @param newValue
     */
-   private void reloadData(OfferSite newValue) {
+   private void reloadData(final OfferSite newValue) {
       if (newValue != null) {
          userChart.setTitle(newValue.offerName);
-         GaData data = getGAData(newValue.viewId, newValue.path);
+         final GaData data = getGAData(newValue.viewId, newValue.path);
          showData(data);
          showChart(data);
       }
    }
 
    public void start() {
-   
+
       initOfferListView();
-   
+
       // init TableView
       colMonth.setCellValueFactory(new PropertyValueFactory<TableEntry, String>("month"));
       colUsers.setCellValueFactory(new PropertyValueFactory<TableEntry, Integer>("users"));
-      colAvgSessionDuration.setCellValueFactory(new PropertyValueFactory<TableEntry, String>("avgSessionDuration"));   
+      colAvgSessionDuration.setCellValueFactory(new PropertyValueFactory<TableEntry, String>("avgSessionDuration"));
       dataList = new ArrayList<TableEntry>();
       observableDataList = FXCollections.observableArrayList(dataList);
       dataTable.setItems(observableDataList);
-   
+
       // BarChart
       userChart.getXAxis().setLabel("Monate");
       userChart.getYAxis().setLabel("Besucher");
       userChart.getYAxis().setAutoRanging(false);
-   
+
       stage.centerOnScreen();
       stage.toFront();
       stage.setResizable(true);
       stage.showAndWait();
-   
+
    }
 
-   public void setStage(Stage stage) {
+   public void setStage(final Stage stage) {
       this.stage = stage;
    }
 
-   public void setAnalytics(Analytics analytics) {
+   public void setAnalytics(final Analytics analytics) {
       this.analytics = analytics;
-   
+
    }
 
    /**
@@ -278,29 +282,30 @@ public class GABrowserController {
    @FXML
    public void addOffer() {
       try {
-         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("ProfileSelector.fxml"));
-   
-         AnchorPane page = (AnchorPane) loader.load();
-         Scene scene = new Scene(page);
-   
-         Stage dialogeStage = new Stage();
+         final FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("ProfileSelector.fxml"));
+
+         final AnchorPane page = (AnchorPane) loader.load();
+         final Scene scene = new Scene(page);
+
+         final Stage dialogeStage = new Stage();
          dialogeStage.setTitle("Auswertung für ein Website-Angebot erstellen");
          dialogeStage.initModality(Modality.WINDOW_MODAL);
          dialogeStage.toFront();
          dialogeStage.setResizable(false);
          dialogeStage.initOwner(stage);
          dialogeStage.setScene(scene);
-   
+
          // Link with controller
-         ProfileSelectorController controller = loader.getController();
-   
+         final ProfileSelectorController controller = loader.getController();
+
          controller.setStage(dialogeStage);
          controller.setAnalytics(analytics);
-   
+
          controller.start();
-   
+
          if (controller.isSave()) {
-            OfferSite offer = new OfferSite(controller.getOffername(), controller.getViewid(), controller.getPath());
+            final OfferSite offer = new OfferSite(controller.getOffername(), controller.getViewid(),
+                  controller.getPath());
             if (offer.path == null || offer.path.length() == 0) {
                offer.path = "/";
             }
@@ -308,12 +313,11 @@ public class GABrowserController {
             OfferSite.saveFile(offerListView.getItems());
             offerListView.refresh();
          }
-   
-      }
-      catch (Exception e) {
+
+      } catch (final Exception e) {
          MainApp.showException("Dialog konnte nicht initialisiert werden.", e);
       }
-   
+
    }
 
    /**
@@ -332,8 +336,8 @@ public class GABrowserController {
 
    @FXML
    public void reloadData() {
-      OfferSite offer = offerListView.getSelectionModel().getSelectedItem();
-      reloadData( offer );
+      final OfferSite offer = offerListView.getSelectionModel().getSelectedItem();
+      reloadData(offer);
    }
 
 }

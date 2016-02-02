@@ -1,8 +1,10 @@
 package de.doubleslash.ga;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.GeneralSecurityException;
 import java.util.Collections;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -11,7 +13,6 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -37,8 +38,8 @@ public class MainApp extends Application {
    private static final String APPLICATION_NAME = "GABrowser";
    private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
          ".store/analytics_sample");
-   private static FileDataStoreFactory dataStoreFactory;
-   private static HttpTransport httpTransport;
+   private FileDataStoreFactory dataStoreFactory;
+   private HttpTransport httpTransport;
    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
    Analytics analytics;
@@ -50,9 +51,10 @@ public class MainApp extends Application {
     * limited up to 50.000 req/day.
     * 
     * @return
+    * @throws IOException
     * @throws Exception
     */
-   private static Credential authorize() throws Exception {
+   private Credential authorize() throws IOException {
       // load client secrets
       final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
             new InputStreamReader(MainApp.class.getResourceAsStream("/client_secrets.json")));
@@ -77,10 +79,11 @@ public class MainApp extends Application {
     * Performs all necessary setup steps for running requests against the API.
     * 
     * @return An initialized Analytics service object.
+    * @throws IOException
     * @throws Exception
     *            if an issue occurs with OAuth2Native authorize.
     */
-   private static Analytics initializeAnalytics() throws Exception {
+   private Analytics initializeAnalytics() throws IOException {
       // Authorization.
       final Credential credential = authorize();
 
@@ -96,12 +99,8 @@ public class MainApp extends Application {
          httpTransport = GoogleNetHttpTransport.newTrustedTransport();
          dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
          analytics = initializeAnalytics();
-
-      } catch (final GoogleJsonResponseException e) {
-         System.err
-               .println("There was a service error: " + e.getDetails().getCode() + " : " + e.getDetails().getMessage());
-      } catch (final Throwable t) {
-         t.printStackTrace();
+      } catch (GeneralSecurityException | IOException e) {
+         showException("There was a service error: " + e.toString() + " : " + e.getMessage(), e);
       }
 
       OfferSite.loadOfferSite();
