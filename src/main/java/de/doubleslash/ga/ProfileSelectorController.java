@@ -73,39 +73,65 @@ public class ProfileSelectorController {
 
       final ObservableList<Account> accountList = FXCollections.observableList(accounts.getItems());
       cmbAccount.setItems(accountList);
-      cmbAccount.setCellFactory(p -> new ListCell<Account>() {
+
+      setCellFactories();
+
+      setSelectionListener();
+
+      setListItemConverter();
+
+   }
+
+   /**
+    * 
+    */
+   private void setListItemConverter() {
+      // selected value showed in combo box
+      cmbAccount.setConverter(new StringConverter<Account>() {
+
          @Override
-         protected void updateItem(final Account account, final boolean bln) {
-            super.updateItem(account, bln);
-            if (account != null) {
-               // Schreibe einfach nur den Namen des Offers in die Zelle
-               setText(account.getName());
-            }
+         public String toString(final Account object) {
+            return object.getName();
+         }
+
+         @Override
+         public Account fromString(final String string) {
+            return null;
          }
       });
+      // selected value showed in combo box
+      cmbProperty.setConverter(new StringConverter<Webproperty>() {
 
-      cmbProperty.setCellFactory(p -> new ListCell<Webproperty>() {
          @Override
-         protected void updateItem(final Webproperty property, final boolean empty) {
-            super.updateItem(property, empty);
-            if (property != null) {
-               // Schreibe einfach nur den Namen des Offers in die Zelle
-               setText(property.getName());
-            }
+         public String toString(final Webproperty object) {
+            return object.getName();
+         }
+
+         @Override
+         public Webproperty fromString(final String string) {
+            return null;
          }
       });
+      // selected value showed in combo box
+      cmbView.setConverter(new StringConverter<Profile>() {
 
-      cmbView.setCellFactory(p -> new ListCell<Profile>() {
          @Override
-         protected void updateItem(final Profile profile, final boolean empty) {
-            super.updateItem(profile, empty);
-            if (profile != null) {
-               // Schreibe einfach nur den Namen des Offers in die Zelle
-               setText(profile.getName());
-            }
+         public String toString(final Profile object) {
+            return object.getName();
+         }
+
+         @Override
+         public Profile fromString(final String string) {
+            // TODO Auto-generated method stub
+            return null;
          }
       });
+   }
 
+   /**
+    * 
+    */
+   private void setSelectionListener() {
       cmbAccount.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Account>() {
 
          @Override
@@ -157,58 +183,54 @@ public class ProfileSelectorController {
             lblViewid.setText(viewid);
          }
       });
+   }
 
-      // selected value showed in combo box
-      cmbAccount.setConverter(new StringConverter<Account>() {
-
+   /**
+    * 
+    */
+   private void setCellFactories() {
+      cmbAccount.setCellFactory(p -> new ListCell<Account>() {
          @Override
-         public String toString(final Account object) {
-            return object.getName();
-         }
-
-         @Override
-         public Account fromString(final String string) {
-            return null;
-         }
-      });
-      // selected value showed in combo box
-      cmbProperty.setConverter(new StringConverter<Webproperty>() {
-
-         @Override
-         public String toString(final Webproperty object) {
-            return object.getName();
-         }
-
-         @Override
-         public Webproperty fromString(final String string) {
-            return null;
-         }
-      });
-      // selected value showed in combo box
-      cmbView.setConverter(new StringConverter<Profile>() {
-
-         @Override
-         public String toString(final Profile object) {
-            return object.getName();
-         }
-
-         @Override
-         public Profile fromString(final String string) {
-            // TODO Auto-generated method stub
-            return null;
+         protected void updateItem(final Account account, final boolean bln) {
+            super.updateItem(account, bln);
+            if (account != null) {
+               // Schreibe einfach nur den Namen des Offers in die Zelle
+               setText(account.getName());
+            }
          }
       });
 
+      cmbProperty.setCellFactory(p -> new ListCell<Webproperty>() {
+         @Override
+         protected void updateItem(final Webproperty property, final boolean empty) {
+            super.updateItem(property, empty);
+            if (property != null) {
+               // Schreibe einfach nur den Namen des Offers in die Zelle
+               setText(property.getName());
+            }
+         }
+      });
+
+      cmbView.setCellFactory(p -> new ListCell<Profile>() {
+         @Override
+         protected void updateItem(final Profile profile, final boolean empty) {
+            super.updateItem(profile, empty);
+            if (profile != null) {
+               // Schreibe einfach nur den Namen des Offers in die Zelle
+               setText(profile.getName());
+            }
+         }
+      });
    }
 
    @FXML
-   private void cancel() {
+   public void cancel() {
       setSave(false);
       stage.close();
    }
 
    @FXML
-   private void save() {
+   public void save() {
       setSave(true);
       stage.close();
    }

@@ -36,10 +36,10 @@ import javafx.stage.Stage;
  */
 public class GABrowserController {
 
+   private static final double YAXIS_MARGIN = 100.0;
    Stage stage;
    Analytics analytics;
 
-   private List<TableEntry> dataList;
    private ObservableList<TableEntry> observableDataList;
 
    @FXML
@@ -148,7 +148,7 @@ public class GABrowserController {
             // adjust
             final NumberAxis y = (NumberAxis) userChart.getYAxis();
             if (users > y.getUpperBound()) {
-               y.setUpperBound(users + 100.0);
+               y.setUpperBound(users + YAXIS_MARGIN);
             }
 
          }
@@ -188,21 +188,9 @@ public class GABrowserController {
    }
 
    /**
-    * Prints the output from the Core Reporting API. The profile name is printed along with each column name and all the
-    * data in the rows.
-    *
-    * @param results
-    *           data returned from the Core Reporting API.
+    * @param num
+    * @return
     */
-   /*
-    * private static void printGaData(final GaData results) { System.out.println("printing results for profile: " +
-    * results.getProfileInfo().getProfileName()); if (results.getRows() == null || results.getRows().isEmpty()) {
-    * System.out.println("No results Found."); } else { // Print column headers. for (final ColumnHeaders header :
-    * results.getColumnHeaders()) { System.out.printf("%30s", header.getName()); } System.out.println(); // Print actual
-    * data. for (final List<String> row : results.getRows()) { for (final String column : row) {
-    * System.out.printf("%30s", column); } System.out.println(); } System.out.println(); } }
-    */
-
    private String getMonthForInt(final int num) {
       String month = "wrong";
       final DateFormatSymbols dfs = new DateFormatSymbols();
@@ -233,8 +221,7 @@ public class GABrowserController {
       colMonth.setCellValueFactory(new PropertyValueFactory<TableEntry, String>("month"));
       colUsers.setCellValueFactory(new PropertyValueFactory<TableEntry, Integer>("users"));
       colAvgSessionDuration.setCellValueFactory(new PropertyValueFactory<TableEntry, String>("avgSessionDuration"));
-      dataList = new ArrayList<TableEntry>();
-      observableDataList = FXCollections.observableArrayList(dataList);
+      observableDataList = FXCollections.observableArrayList(new ArrayList<TableEntry>());
       dataTable.setItems(observableDataList);
 
       // BarChart

@@ -65,8 +65,8 @@ public class OfferSite {
          }
          br.close();
       } catch (final IOException e) {
-         MainApp.showInfo("Sicherungsdatei '" + offerFile
-               + "' kann nicht gelesen werden. Wenn du eine Auswertung anlegst, dann wird automatisch eine Sicherungsdatei erzeugt.");
+         MainApp.showInfo("Sicherungsdatei '" + offerFile + "' kann nicht gelesen werden. "
+               + "Wenn du eine Auswertung anlegst, dann wird automatisch eine Sicherungsdatei erzeugt.");
       }
 
       final List<OfferSite> sites = new ArrayList<>();
