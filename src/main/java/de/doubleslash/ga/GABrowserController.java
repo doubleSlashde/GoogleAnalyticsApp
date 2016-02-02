@@ -106,7 +106,7 @@ public class GABrowserController {
          for (final List<String> row : data.getRows()) {
 
             final String month = getMonthForInt(Integer.valueOf(row.get(1))) + " " + row.get(0);
-            final Integer users = new Integer(row.get(2));
+            final Integer users = Integer.valueOf(row.get(2));
             final int sec = (new Double(row.get(3))).intValue();
             final String avgSessionDuration = sec / 60 + ":" + String.format("%02d", (sec % 60));
 
@@ -137,7 +137,7 @@ public class GABrowserController {
          // Print actual data.
          for (final List<String> row : data.getRows()) {
             final String month = getMonthForInt(Integer.valueOf(row.get(1))) + " " + row.get(0);
-            final Integer users = new Integer(row.get(2));
+            final Integer users = Integer.valueOf(row.get(2));
 
             final XYChart.Data<String, Number> datapoint = new XYChart.Data<>(month, users);
             final Tooltip tooltip = new Tooltip();
@@ -195,7 +195,7 @@ public class GABrowserController {
     * @param results
     *           data returned from the Core Reporting API.
     */
-   @SuppressWarnings("unused")
+   /*
    private static void printGaData(final GaData results) {
       System.out.println("printing results for profile: " + results.getProfileInfo().getProfileName());
 
@@ -220,7 +220,8 @@ public class GABrowserController {
          System.out.println();
       }
    }
-
+*/
+   
    private String getMonthForInt(final int num) {
       String month = "wrong";
       final DateFormatSymbols dfs = new DateFormatSymbols();

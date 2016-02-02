@@ -37,7 +37,7 @@ public class MainApp extends Application {
 
    private static final String APPLICATION_NAME = "GABrowser";
    private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
-         ".store/analytics_sample");
+         ".store/ga_app");
    private FileDataStoreFactory dataStoreFactory;
    private HttpTransport httpTransport;
    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -69,10 +69,8 @@ public class MainApp extends Application {
                                                .build();
        // @formatter:on
 
-      final Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver())
-            .authorize("user");
+      return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 
-      return credential;
    }
 
    /**
