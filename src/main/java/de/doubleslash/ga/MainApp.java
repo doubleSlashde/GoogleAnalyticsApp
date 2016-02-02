@@ -177,7 +177,6 @@ public class MainApp extends Application {
       expContent.add(textArea, 0, 1);
 
       // Set expandable Exception into the dialog pane.
-      // alert.getDialogPane().setPrefSize(800, 540);
       alert.getDialogPane().setExpandableContent(expContent);
 
       alert.showAndWait();

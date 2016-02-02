@@ -58,15 +58,16 @@ public class OfferSite {
       String line;
       final List<String> lines = new ArrayList<>();
 
-      try {
-         final BufferedReader br = new BufferedReader(new FileReader(file));
-         while ((line = br.readLine()) != null) {
-            lines.add(line);
+      if (file.exists()) {
+         try {
+            final BufferedReader br = new BufferedReader(new FileReader(file));
+            while ((line = br.readLine()) != null) {
+               lines.add(line);
+            }
+            br.close();
+         } catch (final IOException e) {
+            MainApp.showException("Sicherungsdatei '" + offerFile + "' kann nicht gelesen werden.", e);
          }
-         br.close();
-      } catch (final IOException e) {
-         MainApp.showInfo("Sicherungsdatei '" + offerFile + "' kann nicht gelesen werden. "
-               + "Wenn du eine Auswertung anlegst, dann wird automatisch eine Sicherungsdatei erzeugt.");
       }
 
       final List<OfferSite> sites = new ArrayList<>();
