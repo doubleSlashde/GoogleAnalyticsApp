@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.Analytics.Data.Ga.Get;
 import com.google.api.services.analytics.model.GaData;
-import com.google.api.services.analytics.model.GaData.ColumnHeaders;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -196,32 +195,14 @@ public class GABrowserController {
     *           data returned from the Core Reporting API.
     */
    /*
-   private static void printGaData(final GaData results) {
-      System.out.println("printing results for profile: " + results.getProfileInfo().getProfileName());
+    * private static void printGaData(final GaData results) { System.out.println("printing results for profile: " +
+    * results.getProfileInfo().getProfileName()); if (results.getRows() == null || results.getRows().isEmpty()) {
+    * System.out.println("No results Found."); } else { // Print column headers. for (final ColumnHeaders header :
+    * results.getColumnHeaders()) { System.out.printf("%30s", header.getName()); } System.out.println(); // Print actual
+    * data. for (final List<String> row : results.getRows()) { for (final String column : row) {
+    * System.out.printf("%30s", column); } System.out.println(); } System.out.println(); } }
+    */
 
-      if (results.getRows() == null || results.getRows().isEmpty()) {
-         System.out.println("No results Found.");
-      } else {
-
-         // Print column headers.
-         for (final ColumnHeaders header : results.getColumnHeaders()) {
-            System.out.printf("%30s", header.getName());
-         }
-         System.out.println();
-
-         // Print actual data.
-         for (final List<String> row : results.getRows()) {
-            for (final String column : row) {
-               System.out.printf("%30s", column);
-            }
-            System.out.println();
-         }
-
-         System.out.println();
-      }
-   }
-*/
-   
    private String getMonthForInt(final int num) {
       String month = "wrong";
       final DateFormatSymbols dfs = new DateFormatSymbols();
