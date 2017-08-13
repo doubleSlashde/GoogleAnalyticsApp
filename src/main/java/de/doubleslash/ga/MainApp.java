@@ -42,17 +42,13 @@ public class MainApp extends Application {
    private HttpTransport httpTransport;
    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-   Analytics analytics;
+   private Analytics analytics;
 
    /**
     * Authorizes the installed application to access user's protected data. <br>
     * To get your own client_secrets.json use the Google API Developer console
     * (https://console.developers.google.com/apis/credentials) the registered client_secrets.json within this project is
     * limited up to 50.000 req/day.
-    * 
-    * @return
-    * @throws IOException
-    * @throws Exception
     */
    private Credential authorize() throws IOException {
       // load client secrets
@@ -77,9 +73,7 @@ public class MainApp extends Application {
     * Performs all necessary setup steps for running requests against the API.
     * 
     * @return An initialized Analytics service object.
-    * @throws IOException
-    * @throws Exception
-    *            if an issue occurs with OAuth2Native authorize.
+    * @throws IOException if an issue occurs with OAuth2Native authorize.
     */
    private Analytics initializeAnalytics() throws IOException {
       // Authorization.
@@ -104,9 +98,9 @@ public class MainApp extends Application {
       OfferSite.loadOfferSite();
 
       try {
-         final FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("GABrowser.fxml"));
+         final FXMLLoader loader = new FXMLLoader(MainApp.class.getClassLoader().getResource("GABrowser.fxml"));
 
-         final AnchorPane page = (AnchorPane) loader.load();
+         final AnchorPane page = loader.load();
          final Scene scene = new Scene(page);
 
          final Stage stage = new Stage();
@@ -135,9 +129,7 @@ public class MainApp extends Application {
       launch(args);
    }
 
-   /**
-    * @param message
-    */
+
    public static void showInfo(final String message) {
       final Alert alert = new Alert(AlertType.INFORMATION);
       alert.setContentText(message);
@@ -148,7 +140,7 @@ public class MainApp extends Application {
       alert.showAndWait();
    }
 
-   public static void showException(final String message, final Exception e) {
+   static void showException(final String message, final Exception e) {
       final Alert alert = new Alert(AlertType.ERROR);
       alert.setContentText(message);
       alert.setHeaderText("Systemfehler");
